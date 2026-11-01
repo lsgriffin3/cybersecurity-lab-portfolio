@@ -26,3 +26,5 @@ Write-ups identify guided exercises and assistance where applicable.
 - [Operation ECHOLEAK — Microsoft 365 Copilot Prompt Injection](./investigations/operation-echoleak/)
 
 - [Cargo Hold — Hunt 19](./investigations/cargo-hold/)
+
+- - [Meridian — Hunt 25 (Guided)](./investigations/meridian-guided/)
