@@ -34,11 +34,3 @@ Each project includes:
 All projects involve simulated training environments. Project write-ups identify guidance and assistance where applicable.
 
 Adapted queries are labeled separately from an exact record of queries executed. Findings distinguish supplied scenario information, exercise results, and conclusions supported by the available evidence.
-
-## Completed Investigations
-
-- [Operation ECHOLEAK — Microsoft 365 Copilot Prompt Injection](./investigations/operation-echoleak/)
-
-- [Cargo Hold — Hunt 19](./investigations/cargo-hold/)
-
-- [Meridian — Hunt 25 (Guided)](./investigations/meridian-guided/)
