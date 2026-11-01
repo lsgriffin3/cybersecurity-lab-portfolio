@@ -51,6 +51,135 @@ The following queries are adapted from the guided exercise material. Each exampl
 | Review memory acquisition | MeridianAudit_CL |
 
 
+### 1. Identify reconnaissance tools
+
+This query groups requests by user agent and sorts them by their first appearance.
+
+```kusto
+MeridianAccess_CL
+| where isnotempty(EventTime_t)
+| where EventTime_t >= datetime(2026-02-06)
+    and EventTime_t < datetime(2026-02-07)
+| where ClientIp_s == "10.1.134.57"
+| summarize FirstSeen=min(EventTime_t), Requests=count() by UserAgent_s
+| order by FirstSeen asc
+```
+
+**Exercise finding:** The reconnaissance sequence was nmap, curl, whatweb, and gobuster. User-agent strings provide clues about tools but can be changed or spoofed.
+
+### 2. Investigate sensitive file reads
+
+This query finds successful responses from the vulnerable endpoint when a file parameter was supplied.
+
+```kusto
+MeridianAccess_CL
+| where isnotempty(EventTime_t)
+| where EventTime_t >= datetime(2026-02-06)
+    and EventTime_t < datetime(2026-02-07)
+| where ClientIp_s == "10.1.134.57"
+| where RequestUri_s has "config_viewer"
+    and RequestUri_s contains "file="
+| where StatusCode_s == "200"
+| project EventTime_t, RequestUri_s, ResponseSize_s
+| order by EventTime_t asc
+```
+
+**Exercise finding:** The attacker read /etc/passwd, followed by database.conf. The requests and response sizes helped establish the sequence; a successful HTTP status alone does not establish the exact response contents.
+
+### 3. Review successful SSH access
+
+This query checks accepted password logins shortly after the configuration file was accessed.
+
+```kusto
+MeridianAuth_CL
+| where isnotempty(EventTime_t)
+| where EventTime_t between
+    (datetime(2026-02-06 04:08:00) .. datetime(2026-02-06 04:12:00))
+| where RawMessage_s has "Accepted password"
+| project EventTime_t, RawMessage_s
+| order by EventTime_t asc
+```
+
+**Exercise finding:** svc_backup logged in from 10.1.134.57 at 04:09:31 UTC, 57 seconds after the configuration-file read. This timing supports suspected credential reuse, although the exact password is not available in the supplied evidence.
+
+### 4. Identify root-shell execution
+
+This query locates audit records involving the rootbash executable and displays the recorded user identifiers.
+
+```kusto
+MeridianAudit_CL
+| where isnotempty(EventTime_t)
+| where EventTime_t >= datetime(2026-02-06)
+    and EventTime_t < datetime(2026-02-07)
+| where Types_s has "EXECVE"
+| where Argv_s has "rootbash"
+| project EventTime_t, comm_s, exe_s, Argv_s, auid_s, euid_s
+| order by EventTime_t asc
+```
+
+**Exercise finding:** /tmp/rootbash -p ran at 04:40:15 UTC with effective UID 0. This supported root-level execution. The available records did not establish how the binary was originally placed on disk.
+
+### 5. Inspect the surviving backdoor
+
+This query examines process snapshots containing the suspected backdoor executable.
+
+```kusto
+MeridianSnapshot_CL
+| where isnotempty(EventTime_t)
+| where EventTime_t >= datetime(2026-02-06)
+    and EventTime_t < datetime(2026-02-07)
+| where isnotempty(ProcBeaconExeLink_s)
+| project EventTime_t, ProcBeaconName_s, ProcBeaconExeLink_s,
+    ProcBeaconUid_s, ProcBeaconPPid_s, ProcBeaconPid_s
+| order by EventTime_t asc
+```
+
+**Exercise finding:** /opt/meridian/scripts/health_check remained active as PID 267155. The exercise identified real UID 1001, effective UID 0, and parent PID 1. Comparing snapshots with sweep logs showed that detection had not resulted in removal.
+
+### 6. Examine outbound connection detections
+
+This query summarizes network records for the suspected command-and-control destination. The raw messages must be checked to distinguish blocked connections from other network events.
+
+```kusto
+MeridianDefender_CL
+| where isnotempty(EventTime_t)
+| where EventTime_t >= datetime(2026-02-06)
+    and EventTime_t < datetime(2026-02-07)
+| where EventCategory_s == "NETWORK"
+| where DestIp_s == "10.1.134.57"
+| summarize Events=count(), FirstSeen=min(EventTime_t),
+    LastSeen=max(EventTime_t) by DestIp_s, DestPort_s, RawMessage_s
+| order by FirstSeen asc
+```
+
+**Exercise finding:** The guided investigation identified 73 blocked outbound connections to 10.1.134.57:43212. Blocking those connections did not prove that the backdoor process had stopped or been removed.
+
+### 7. Review memory acquisition
+
+This query identifies recorded AVML executions during the administrator's response.
+
+```kusto
+MeridianAudit_CL
+| where isnotempty(EventTime_t)
+| where EventTime_t > datetime(2026-02-06 05:25:00)
+    and EventTime_t < datetime(2026-02-07)
+| where Types_s has "EXECVE"
+| where Argv_s has "avml" or comm_s has "avml"
+| project EventTime_t, Argv_s, exe_s
+| order by EventTime_t asc
+```
+
+**Exercise finding:** The administrator ran AVML twice, with the output path /tmp/evidence/memory.lime. Execution records document the acquisition commands; validating the resulting memory image would require examining the artifact.
+
+### Key Lessons
+
+- Use the scenario's event timestamp to reconstruct the timeline.
+- Separate provisioning and defensive activity from attacker actions.
+- Distinguish a detection from successful remediation.
+- Compare network blocks with process evidence before declaring containment.
+- Document evidence gaps instead of assuming missing details.
+
+
 
 ## Investigation Report
 [Read the full report (PDF)](./Meridian_Cyber_Range_Incident_Report%20%282%29.pdf)
