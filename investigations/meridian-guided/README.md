@@ -28,3 +28,7 @@ Guided hunt completed. Investigation report pending.
 
 ## Training Context
 The scenario details above come from the supplied briefing. My investigation write-up will separately describe the evidence reviewed, findings, and assistance used.
+
+
+## Investigation Report
+[Read the full report (PDF)](./Meridian_Cyber_Range_Incident_Report%20%282%29.pdf)
