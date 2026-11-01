@@ -27,4 +27,4 @@ Write-ups identify guided exercises and assistance where applicable.
 
 - [Cargo Hold — Hunt 19](./investigations/cargo-hold/)
 
-- - [Meridian — Hunt 25 (Guided)](./investigations/meridian-guided/)
+- [Meridian — Hunt 25 (Guided)](./investigations/meridian-guided/)
