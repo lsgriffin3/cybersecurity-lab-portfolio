@@ -24,7 +24,7 @@ The briefing specifies EventTime_t as the actual event timestamp. TimeGenerated 
 Queries must exclude rows without EventTime_t and use EventTime_t for time filtering and chronological ordering.
 
 ## Status
-Guided hunt completed. Investigation report pending.
+Guided hunt completed. Investigation report available below.
 
 ## Training Context
 The scenario details above come from the supplied briefing. My investigation write-up will separately describe the evidence reviewed, findings, and assistance used.
