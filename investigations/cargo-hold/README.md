@@ -24,8 +24,9 @@ The investigation focused on azuki-sl and azuki-fileserver01 (10.1.0.188).
 These details summarize the supplied briefing. My investigation report will separately describe the evidence I reviewed and the findings I verified.
 
 
+Hunt completed. Investigation report available below.
 
 
-## Status
-Hunt completed. Investigation report written; PDF upload pending.
+## Investigation Report
+[Read the full report (PDF)](./Cargo_Hold_Threat_Hunt_Final_Report.pdf)
 
