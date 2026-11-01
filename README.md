@@ -20,3 +20,7 @@ Project reports will describe:
 ## Training Context
 These investigations take place in simulated lab environments.
 Write-ups identify guided exercises and assistance where applicable.
+
+## Completed Investigations
+
+- [Operation ECHOLEAK — Microsoft 365 Copilot Prompt Injection](./investigations/operation-echoleak/)
