@@ -36,5 +36,21 @@ The scenario details above come from the supplied briefing. My investigation wri
 - Completion date: October 11, 2026
 
 
+## Guided Exercise Queries
+The following queries are adapted from the guided exercise material. Each example explains its purpose and the finding it helps investigate. Revised examples use EventTime_t for scenario timestamps and exclude rows without a valid event time.
+
+
+| Investigation step | Table |
+|---|---|
+| Identify reconnaissance tools | MeridianAccess_CL |
+| Investigate sensitive file reads | MeridianAccess_CL |
+| Review successful SSH access | MeridianAuth_CL |
+| Identify root-shell execution | MeridianAudit_CL |
+| Inspect the surviving backdoor | MeridianSnapshot_CL |
+| Examine blocked outbound connections | MeridianDefender_CL |
+| Review memory acquisition | MeridianAudit_CL |
+
+
+
 ## Investigation Report
 [Read the full report (PDF)](./Meridian_Cyber_Range_Incident_Report%20%282%29.pdf)
