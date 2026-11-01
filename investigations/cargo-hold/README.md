@@ -1,5 +1,7 @@
 
-# Cargo Hold — Hunt- 19
+# Cargo Hold — Hunt 19
+Training context: This report documents a simulated LogNPacific cyber-range exercise completed with guided assistance.
+
 
 ## Overview
 This project documents my completed Cargo Hold threat-hunting exercise in the LogNPacific cyber range.
@@ -25,7 +27,5 @@ These details summarize the supplied briefing. My investigation report will sepa
 
 
 ## Status
-Hunt completed. Investigation report being prepared.
+Hunt completed. Investigation report written; PDF upload pending.
 
-## Training Context
-This was a simulated cybersecurity training exercise. The write-up will identify guidance and assistance used during the investigation.
